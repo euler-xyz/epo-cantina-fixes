@@ -10,9 +10,11 @@ import {Errors} from "src/lib/Errors.sol";
 /// @author Euler Labs (https://www.eulerlabs.com/)
 /// @notice Abstract adapter with virtual bid/ask pricing.
 abstract contract BaseAdapter is IPriceOracle {
+    // @dev Addresses < 0x00..00ffffffff are considered to have 18 decimals without dispatching a call.
+    // This avoids collisions between ISO 4217 representations and (future) precompiles.
     uint256 internal constant ADDRESS_RESERVED_RANGE = 0xffffffff;
-    /// @inheritdoc IPriceOracle
 
+    /// @inheritdoc IPriceOracle
     function getQuote(uint256 inAmount, address base, address quote) external view returns (uint256) {
         return _getQuote(inAmount, base, quote);
     }
@@ -28,7 +30,7 @@ abstract contract BaseAdapter is IPriceOracle {
     /// @param asset ERC20 token address or other asset.
     /// @dev Oracles can use ERC-7535, ISO 4217 or other conventions to represent non-ERC20 assets as addresses.
     /// Integrator Note: `_getDecimals` will return 18 if `asset` is:
-    /// - any address < 0x00000000000000000000000000000000ffffffff (4294967295)
+    /// - any address <= 0x00000000000000000000000000000000ffffffff (4294967295)
     /// - an EOA or a to-be-deployed contract (which may implement `decimals()` after deployment).
     /// - a contract that does not implement `decimals()`.
     /// @return The decimals of the asset.
