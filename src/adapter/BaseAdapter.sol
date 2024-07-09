@@ -10,7 +10,7 @@ import {Errors} from "src/lib/Errors.sol";
 /// @author Euler Labs (https://www.eulerlabs.com/)
 /// @notice Abstract adapter with virtual bid/ask pricing.
 abstract contract BaseAdapter is IPriceOracle {
-    // @dev Addresses < 0x00..00ffffffff are considered to have 18 decimals without dispatching a call.
+    // @dev Addresses <= 0x00..00ffffffff are considered to have 18 decimals without dispatching a call.
     // This avoids collisions between ISO 4217 representations and (future) precompiles.
     uint256 internal constant ADDRESS_RESERVED_RANGE = 0xffffffff;
 
