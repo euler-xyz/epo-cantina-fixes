@@ -33,7 +33,7 @@ abstract contract BaseAdapter is IPriceOracle {
     /// - a contract that does not implement `decimals()`.
     /// @return The decimals of the asset.
     function _getDecimals(address asset) internal view returns (uint8) {
-        if (uint160(asset) < ADDRESS_RESERVED_RANGE) return 18;
+        if (uint160(asset) <= ADDRESS_RESERVED_RANGE) return 18;
         (bool success, bytes memory data) = asset.staticcall(abi.encodeCall(IERC20.decimals, ()));
         return success && data.length == 32 ? abi.decode(data, (uint8)) : 18;
     }
