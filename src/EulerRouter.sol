@@ -44,7 +44,7 @@ contract EulerRouter is Governable, IPriceOracle {
 
     /// @notice Deploy EulerRouter.
     /// @param _governor The address of the governor.
-    constructor(address _governor) Governable(_governor) {
+    constructor(address _evc, address _governor) Governable(_evc, _governor) {
         if (_governor == address(0)) revert Errors.PriceOracle_InvalidConfiguration();
     }
 

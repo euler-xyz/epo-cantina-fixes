@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
+import {EVCUtil} from "ethereum-vault-connector/utils/EVCUtil.sol";
 import {Errors} from "src/lib/Errors.sol";
 
 /// @title Governable
 /// @custom:security-contact security@euler.xyz
 /// @author Euler Labs (https://www.eulerlabs.com/)
-/// @notice Contract mixin for governance.
-abstract contract Governable {
+/// @notice Contract mixin for governance, compatible with EVC.
+abstract contract Governable is EVCUtil {
     /// @notice The active governor address. If `address(0)` then the role is renounced.
     address public governor;
 
@@ -16,7 +17,7 @@ abstract contract Governable {
     /// @param newGovernor The address of the newly appointed governor.
     event GovernorSet(address indexed oldGovernor, address indexed newGovernor);
 
-    constructor(address _governor) {
+    constructor(address _evc, address _governor) EVCUtil(_evc) {
         _setGovernor(_governor);
     }
 
@@ -29,7 +30,7 @@ abstract contract Governable {
 
     /// @notice Restrict access to the governor.
     modifier onlyGovernor() {
-        if (msg.sender != governor) {
+        if (_msgSender() != governor) {
             revert Errors.Governance_CallerNotGovernor();
         }
         _;
