@@ -53,7 +53,7 @@ contract EulerRouter is Governable, IPriceOracle {
     /// @param quote The address of the quote token.
     /// @param oracle The address of the PriceOracle to resolve the pair.
     /// @dev Callable only by the governor.
-    function govSetConfig(address base, address quote, address oracle) external onlyGovernor {
+    function govSetConfig(address base, address quote, address oracle) external onlyGovernor onlyEVCAccountOwner {
         // This case is handled by `resolveOracle`.
         if (base == quote) revert Errors.PriceOracle_InvalidConfiguration();
         (address asset0, address asset1) = _sort(base, quote);
@@ -66,7 +66,7 @@ contract EulerRouter is Governable, IPriceOracle {
     /// @param set True to configure the vault, false to clear the record.
     /// @dev Callable only by the governor. Vault must implement ERC4626.
     /// Note: Before configuring a vault verify that its `convertToAssets` is secure.
-    function govSetResolvedVault(address vault, bool set) external onlyGovernor {
+    function govSetResolvedVault(address vault, bool set) external onlyGovernor onlyEVCAccountOwner {
         address asset = set ? IERC4626(vault).asset() : address(0);
         resolvedVaults[vault] = asset;
         emit ResolvedVaultSet(vault, asset);
@@ -75,7 +75,7 @@ contract EulerRouter is Governable, IPriceOracle {
     /// @notice Set a PriceOracle as a fallback resolver.
     /// @param _fallbackOracle The address of the PriceOracle that is called when base/quote is not configured.
     /// @dev Callable only by the governor. `address(0)` removes the fallback.
-    function govSetFallbackOracle(address _fallbackOracle) external onlyGovernor {
+    function govSetFallbackOracle(address _fallbackOracle) external onlyGovernor onlyEVCAccountOwner {
         fallbackOracle = _fallbackOracle;
         emit FallbackOracleSet(_fallbackOracle);
     }
