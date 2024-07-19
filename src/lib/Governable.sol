@@ -24,7 +24,7 @@ abstract contract Governable is EVCUtil {
     /// @notice Transfer the governor role to another address.
     /// @param newGovernor The address of the next governor.
     /// @dev Can only be called by the current governor.
-    function transferGovernance(address newGovernor) external onlyGovernor onlyEVCAccountOwner {
+    function transferGovernance(address newGovernor) external onlyEVCAccountOwner onlyGovernor {
         _setGovernor(newGovernor);
     }
 
